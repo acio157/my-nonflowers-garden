@@ -1315,7 +1315,7 @@ function fakeLatin(){
 // generate new plant
 function generate(){
   CTX = Layer.empty();
-CTX.fillStyle = "rgb(242,187,174)"
+CTX.fillStyle = "rgb(226,220,209)"
   CTX.fillRect(0,0,CTX.canvas.width,CTX.canvas.height)
   if (Math.random() <= 0.5){
     woody({ctx:CTX,xof:300,yof:550,})
