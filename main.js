@@ -1135,9 +1135,9 @@ function herbal(args){
          ])})
     }
   }
-  Layer.filter(lay0,Filter.fade)
-  Layer.filter(lay0,Filter.wispy)
-  Layer.filter(lay1,Filter.wispy)
+  //Layer.filter(lay0,Filter.fade)
+  //Layer.filter(lay0,Filter.wispy)
+  //Layer.filter(lay1,Filter.wispy)
   var b1 = Layer.bound(lay0)
   var b2 = Layer.bound(lay1)
   var bd = {
@@ -1300,15 +1300,8 @@ function makeBG(){
 // generate new plant
 function generate(){
   CTX = Layer.empty();
-  CTX.fillStyle ="white"
+CTX.fillStyle = "rgb(242,187,174)"
   CTX.fillRect(0,0,CTX.canvas.width,CTX.canvas.height)
-  //document.body.appendChild(CTX.canvas)
-  var ppr = paper({col:PAPER_COL1})
-  for (var i = 0; i < CTX.canvas.width; i+= 512){
-    for (var j = 0; j < CTX.canvas.height; j+= 512){
-      CTX.drawImage(ppr,i,j);
-    }
-  }
   if (Math.random() <= 0.5){
     woody({ctx:CTX,xof:300,yof:550,})
   }else{
