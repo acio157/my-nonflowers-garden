@@ -1252,7 +1252,7 @@ CTX = Layer.empty();
 var BGCANV;
 
 PAPER_COL0 = [1,0.99,0.9]
-PAPER_COL1 = [0.98,0.91,0.74]
+PAPER_COL1 = [0.95,0.73,0.68]
 
 // download generated image
 function makeDownload(){
