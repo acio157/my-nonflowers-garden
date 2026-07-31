@@ -130,7 +130,7 @@
 }
 body {
   background-image:
-    linear-gradient(rgba(244,240,231,0.15), rgba(244,240,231,0.15)),
+    linear-gradient(rgba(244,240,231,0.55), rgba(244,240,231,0.55)),
     url('travertine-bg.jpg') !important;
   background-size: cover !important;
   background-position: center !important;
