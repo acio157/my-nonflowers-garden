@@ -137,4 +137,7 @@ body {
   background-attachment: fixed !important;
   background-repeat: no-repeat !important;
 }
-
+#canvas-container canvas {
+  width: 85vmin;
+  height: 85vmin;
+}
