@@ -214,6 +214,14 @@ var squircle = function(r,a){
     return r*pow(1/(pow(cos(th),a)+pow(sin(th),a)),1/a)
   }
 }
+// hexagon border shape
+var hexagon = function(R){
+  return function(th){
+    var sector = PI/3
+    var m = (((th + PI/6) % sector) + sector) % sector - sector/2
+    return R*cos(PI/6)/cos(m)
+  }
+}
 // mid-point of an array of points
 function midPt(){
   var plist = (arguments.length == 1) ? 
@@ -1307,7 +1315,7 @@ CTX.fillStyle = "rgb(242,187,174)"
   }else{
     herbal({ctx:CTX,xof:300,yof:600,})
   }
-  Layer.border(CTX,squircle(0.98,3))
+  Layer.border(CTX,hexagon(0.98))
 }
 
 // reload page with given seed
