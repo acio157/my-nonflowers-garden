@@ -1304,7 +1304,14 @@ function makeBG(){
     document.body.style.backgroundImage = 'url('+img+')';
   }
 }
-
+// fake latin species name
+function fakeLatin(){
+  var g1 = ["Cor","Vitr","Hex","Vesper","Noct","Flor","Umbra","Sylv","Aur","Lun","Petr","Cael","Glauc","Ros","Amar","Ferv","Pall","Sapon"]
+  var g2 = ["ia","antha","anthus","ella","aria","ora","ina","yntha","escia"]
+  var sp = ["nocturna","vespertina","glauca","picta","radiata","coralligera","hexagona","nivea","umbratilis","sylvestris","aurata","lunaris","vulgaris","spinosa","fervida","pallida","florida","caelestis","saponaria","miroana"]
+  function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1).toLowerCase() }
+  return cap(randChoice(g1)+randChoice(g2)) + " " + randChoice(sp)
+}
 // generate new plant
 function generate(){
   CTX = Layer.empty();
@@ -1331,6 +1338,10 @@ function load(){
   function _load(){
     generate()
     document.getElementById("canvas-container").appendChild(CTX.canvas)
+      var nm = document.createElement("div");
+    nm.id = "latin-name";
+    nm.textContent = fakeLatin();
+    document.getElementById("canvas-container").appendChild(nm);
     document.getElementById("loader").style.display = "none";
     document.getElementById("content").style.display = "block";
     document.getElementById("inp-seed").value = SEED;
