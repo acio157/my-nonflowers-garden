@@ -142,6 +142,7 @@ body {
 #canvas-container canvas {
   width: 85vmin;
   height: 85vmin;
+  border: 3px solid #b8912e;
 }
 #latin-name {
   font-family: "EB Garamond", Palatino, Georgia, serif;
