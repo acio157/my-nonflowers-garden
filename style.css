@@ -129,7 +129,9 @@
   color: #0000008d;
 }
 body {
-  background-image: url('travertine-bg.jpg') !important;
+  background-image: background-image:
+    linear-gradient(rgba(244,240,231,0.55), rgba(244,240,231,0.55)),
+    url('travertine-bg.jpg') !important;
   background-size: cover !important;
   background-position: center !important;
   background-attachment: fixed !important;
