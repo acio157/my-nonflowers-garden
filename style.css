@@ -135,6 +135,4 @@ body {
   background-attachment: fixed !important;
   background-repeat: no-repeat !important;
 }
-#canvas-container canvas {
-  border: 3px solid #b8912e;
-}
+
