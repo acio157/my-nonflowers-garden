@@ -1000,9 +1000,9 @@ function woody(args){
       }
     }
   }
-  Layer.filter(lay0,Filter.fade)
-  Layer.filter(lay0,Filter.wispy)
-  Layer.filter(lay1,Filter.wispy)
+  //Layer.filter(lay0,Filter.fade)
+  //Layer.filter(lay0,Filter.wispy)
+  //Layer.filter(lay1,Filter.wispy)
   var b1 = Layer.bound(lay0)
   var b2 = Layer.bound(lay1)
   var bd = {
