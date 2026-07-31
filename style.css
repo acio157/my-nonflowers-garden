@@ -128,3 +128,13 @@
   font-family: monospace;
   color: #0000008d;
 }
+body {
+  background-image: url('travertine-bg.jpg') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
+}
+#canvas-container canvas {
+  border: 3px solid #b8912e;
+}
