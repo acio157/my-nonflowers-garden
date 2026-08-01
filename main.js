@@ -911,7 +911,20 @@ function genParams(){
   var branchValue = normRand(0.7,0.9)
   PAR.branchColor = {min:[branchHue,branchSaturation,branchValue,1],
                      max:[branchHue,branchSaturation,branchValue,1]}
-
+// --- Miró constraints ---
+  if (PAR.artist == "miro"){
+    var miroPrimaries = [
+      [0,   0.82, 0.80],   // red
+      [50,  0.95, 0.95],   // yellow
+      [222, 0.80, 0.72],   // blue
+      [130, 0.62, 0.55],   // green
+    ]
+    var mc = randChoice(miroPrimaries)
+    PAR.flowerColor = {min:[mc[0],mc[1],mc[2],1], max:[mc[0],mc[1],mc[2],1]}
+    PAR.innerColor  = {min:[0,0,0,1], max:[0,0,0,1]}   // solid black centers
+    PAR.leafColor   = {min:[0,0,0,1], max:[0,0,0,1]}   // flat black
+    PAR.branchColor = {min:[0,0,0,1], max:[0,0,0,1]}   // black lines
+  }
   console.log(PAR)
 
   vizParams(PAR)
