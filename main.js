@@ -1,6 +1,6 @@
 // Nonflowers
 // Procedurally generated paintings of nonexistent flowers.
-// (c) Lingdong Huang 2018
+// original code (c) Lingdong Huang 2018 reconstructed here by Apothecary Cyber
 
 
 // index arrays with .x, .y, .z and negative indices
@@ -924,6 +924,7 @@ function genParams(){
     PAR.innerColor  = {min:[0,0,0,1], max:[0,0,0,1]}   // solid black centers
     PAR.leafColor   = {min:[0,0,0,1], max:[0,0,0,1]}   // flat black
     PAR.branchColor = {min:[0,0,0,1], max:[0,0,0,1]}   // black lines
+    PAR.stemColor   = {min:[0,0,0,1], max:[0,0,0,1]}   // black stems
   }
   console.log(PAR)
 
@@ -1063,6 +1064,7 @@ function herbal(args){
     var P = stem({ctx:lay0,xof:x0,yof:y0,
       len:PAR.stemLength*normRand(0.7,1.3),
       rot:r,
+      col:PAR.stemColor,
       wid:(x) => (PAR.stemWidth*
         (pow(sin(x*PI/2+PI/2),0.5)*Noise.noise(x*10)*0.5+0.5)),
       ben:(x) => ([
