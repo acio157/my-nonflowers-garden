@@ -812,7 +812,7 @@ function genParams(){
 
   var PAR = {}
   // --- artist switch (first decision each generation) ---
-  var artists = ["miro"]                  // the roster of possible artists
+  var artists = ["miro","kusama"]               // the roster of possible artists
   PAR.inspired = (Math.random() < 0.3)    // coin: artist-inspired or not
   PAR.artist = PAR.inspired ? randChoice(artists) : "none"
   CURRENT_ARTIST = PAR.artist             // remember it so the name can read it
@@ -938,6 +938,41 @@ function genParams(){
     PAR.flowerWidth = normRand(16,26)               // fatter petals
     PAR.starBloom = (Math.random() < 0.35)   // some Miró plants can bloom stars
   }
+
+// --- Kusama constraints ---
+  if (PAR.artist == "kusama"){
+    // one bold saturated hue per plant, flat; the dots add the contrast later
+    var kusamaHues = [0, 12, 30, 45, 55, 80, 130, 165, 190, 210, 275, 300, 330]
+    // red, coral, orange, amber, yellow, lime, green, teal, cyan, blue, violet, magenta, hot pink
+    var kh = randChoice(kusamaHues)
+    PAR.flowerColor = {min:[kh,0.85,0.92,1], max:[kh,0.85,0.92,1]}
+    PAR.leafColor   = {min:[130,0.75,0.55,1], max:[130,0.75,0.55,1]}   // flat vivid green
+    PAR.innerColor  = {min:[0,0,0.05,1], max:[0,0,0.05,1]}             // dark eye base, dots come later
+    PAR.stemColor   = {min:[130,0.70,0.50,1], max:[130,0.70,0.50,1]}   // green stems
+    PAR.leafType    = [0]                                              // no veins, dots go on top
+
+    // rounded, full, thick
+    PAR.flowerShape     = (x) => (pow(sin(PI*x),0.4))
+    PAR.flowerOpenCurve = (x,op) => (2 + op*6)
+    PAR.flowerPetal     = randChoice([6,7,8])
+    PAR.flowerWidth     = normRand(22,32)
+    PAR.leafShape       = (x) => (pow(sin(PI*x),0.4))
+    PAR.leafWidth       = normRand(20,32)
+    PAR.leafLength      = normRand(35,60)
+    PAR.stemWidth       = normRand(9,16)
+    PAR.stemBend        = normRand(8,18)
+
+    // high flower and density counts
+    PAR.stemCount    = randChoice([2,3])
+    PAR.shootCount   = randChoice([2,3])
+    PAR.leafChance   = normRand(0.03,0.07)
+    PAR.leafPosition = 2
+    PAR.sheathLength = 0
+
+    PAR.dots     = true
+    PAR.dotColor = randChoice(["#ffffff","#111111"])   // white or black dots
+  }
+    
   console.log(PAR)
 
   vizParams(PAR)
@@ -1180,9 +1215,22 @@ function herbal(args){
          ])})
     }
   }
+
   //Layer.filter(lay0,Filter.fade)
   //Layer.filter(lay0,Filter.wispy)
-  //Layer.filter(lay1,Filter.wispy)
+  //Layer.filter(lay1,Filter.wispy)    
+
+    if (PAR.dots){
+    var db = Layer.bound(lay1)
+    lay1.globalCompositeOperation = "source-atop"
+    var n = ((db.xmax-db.xmin)*(db.ymax-db.ymin))/110
+    for (var d = 0; d < n; d++){
+      var dr = randChoice([normRand(1.5,3), normRand(1.5,3), normRand(4,9)])
+      dot(lay1, normRand(db.xmin,db.xmax), normRand(db.ymin,db.ymax), dr, PAR.dotColor)
+    }
+    lay1.globalCompositeOperation = "source-over"
+  }
+
   var b1 = Layer.bound(lay0)
   var b2 = Layer.bound(lay1)
   var bd = {
@@ -1348,7 +1396,7 @@ function fakeLatin(){
   var sp = ["nocturna","vespertina","glauca","picta","radiata","coralligera","hexagona","nivea","umbratilis","sylvestris","aurata","lunaris","vulgaris","spinosa","fervida","pallida","florida","caelestis","saponaria","miroana"]
   function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1).toLowerCase() }
   var latin = cap(randChoice(g1)+randChoice(g2)) + " " + randChoice(sp)
-  var prefix = ({miro:"Miró's "})[CURRENT_ARTIST] || ""
+  var prefix = ({miro:"Miró's ", kusama:"Kusama's "})[CURRENT_ARTIST] || ""
   return prefix + latin
 }
 
@@ -1368,6 +1416,14 @@ function star(args){
     pts.push([x + rr*cos(a), y + rr*sin(a)])
   }
   polygon({ctx:ctx, pts:pts, fil:true, col:col})
+}
+
+// draw a single filled dot
+function dot(ctx,x,y,r,col){
+  ctx.beginPath()
+  ctx.arc(x,y,r,0,2*PI)
+  ctx.fillStyle = col
+  ctx.fill()
 }
 
 // generate new plant
