@@ -929,6 +929,9 @@ function genParams(){
     PAR.sheathLength = 0 //removing sheath for Miro look
     PAR.leafPosition = 2
     PAR.leafChance = randChoice([0, 0, normRand(0,0.03)])  // mostly few or no leaves
+    PAR.leafShape  = (x) => (pow(sin(PI*x),0.4))   // smooth rounded, no jaggedness
+    PAR.leafLength = normRand(28,50)               // shorter, not a blade
+    PAR.leafWidth  = normRand(22,34)               // wider, blobby
     PAR.shootCount = randChoice([1,2])   // fewer blooms per stalk
     PAR.flowerShape = (x) => (pow(sin(PI*x),0.5))   // smooth rounded petal, no jaggedness
     PAR.flowerPetal = randChoice([5,6,7])           // a few bold petals
