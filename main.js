@@ -925,6 +925,8 @@ function genParams(){
     PAR.leafColor   = {min:[0,0,0,1], max:[0,0,0,1]}   // flat black
     PAR.branchColor = {min:[0,0,0,1], max:[0,0,0,1]}   // black lines
     PAR.stemColor   = {min:[0,0,0,1], max:[0,0,0,1]}   // black stems
+    PAR.stemCount  = randChoice([1,2])                     // one or two stalks, not a bush
+    PAR.leafChance = randChoice([0, 0, normRand(0,0.03)])  // mostly few or no leaves
   }
   console.log(PAR)
 
@@ -1336,12 +1338,15 @@ function fakeLatin(){
 // generate new plant
 function generate(){
   CTX = Layer.empty();
-CTX.fillStyle = "rgb(226,220,209)"
+  CTX.fillStyle = "rgb(226,220,209)"
   CTX.fillRect(0,0,CTX.canvas.width,CTX.canvas.height)
-  if (Math.random() <= 0.5){
-    woody({ctx:CTX,xof:300,yof:550,})
+    var PAR = genParams();
+    var herb = (PAR.artist != "none") ? 
+ true : (Math.random() <= 0.5);
+    if (herb){
+herbal({ctx:CTX,xof:300,yof:600,PAR:PAR})
   }else{
-    herbal({ctx:CTX,xof:300,yof:600,})
+    woody({ctx:CTX,xof:300,yof:550,PAR:PAR})
   }
   Layer.border(CTX,hexagon(0.98))
 }
