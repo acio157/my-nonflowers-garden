@@ -936,6 +936,7 @@ function genParams(){
     PAR.flowerShape = (x) => (pow(sin(PI*x),0.5))   // smooth rounded petal, no jaggedness
     PAR.flowerPetal = randChoice([5,6,7])           // a few bold petals
     PAR.flowerWidth = normRand(16,26)               // fatter petals
+    PAR.starBloom = (Math.random() < 0.35)   // some Miró plants can bloom stars
   }
   console.log(PAR)
 
@@ -1127,6 +1128,12 @@ function herbal(args){
          ])})
       var op = Math.random()
       var hhr = [normRand(-1,1)*PI,normRand(-1,1)*PI,normRand(-1,1)*PI]
+    if (PAR.starBloom && Math.random() < 0.5){
+        star({ctx:lay1, x:x0+P[-1].x+P_[-1].x, y:y0+P[-1].y+P_[-1].y,
+              r:20+PAR.flowerLength*1.4,
+              col:hsv(PAR.flowerColor.min[0],PAR.flowerColor.min[1],PAR.flowerColor.min[2],1)})
+        continue
+      }
       for (var k = 0; k < PAR.flowerPetal; k++){
         leaf({ctx:lay1,flo:true,
           xof:x0+P[-1].x+P_[-1].x, yof:y0+P[-1].y+P_[-1].y,
@@ -1344,6 +1351,25 @@ function fakeLatin(){
   var prefix = ({miro:"Miró's "})[CURRENT_ARTIST] || ""
   return prefix + latin
 }
+
+// draw a star as a bloom
+function star(args){
+  var ctx = (args.ctx != undefined) ? args.ctx : CTX
+  var x = args.x, y = args.y
+  var r = (args.r != undefined) ? args.r : 40
+  var ir = r*0.42
+  var n = (args.n != undefined) ? args.n : randChoice([4,5,6])
+  var col = (args.col != undefined) ? args.col : "black"
+  var rot = normRand(0,PI)
+  var pts = []
+  for (var i = 0; i < n*2; i++){
+    var rr = ((i%2==0) ? r : ir) * normRand(0.88,1.12)
+    var a = rot + i*PI/n
+    pts.push([x + rr*cos(a), y + rr*sin(a)])
+  }
+  polygon({ctx:ctx, pts:pts, fil:true, col:col})
+}
+
 // generate new plant
 function generate(){
   CTX = Layer.empty();
