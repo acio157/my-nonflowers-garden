@@ -927,6 +927,7 @@ function genParams(){
     PAR.stemColor   = {min:[0,0,0,1], max:[0,0,0,1]}   // black stems
     PAR.stemCount  = randChoice([1,2])                     // one or two stalks, not a bush
     PAR.sheathLength = 0 //removing sheath for Miro look
+    PAR.leafPosition = 2
     PAR.leafChance = randChoice([0, 0, normRand(0,0.03)])  // mostly few or no leaves
     PAR.shootCount = randChoice([1,2])   // fewer blooms per stalk
     PAR.flowerShape = (x) => (pow(sin(PI*x),0.5))   // smooth rounded petal, no jaggedness
