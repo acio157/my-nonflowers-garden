@@ -939,46 +939,6 @@ function genParams(){
     PAR.starBloom = (Math.random() < 0.35)   // some Miró plants can bloom stars
   }
 
-// --- Kusama constraints ---
-  if (PAR.artist == "kusama"){
-    // one bold saturated hue per plant, flat; the dots add the contrast later
-    var kusamaHues = [0, 12, 30, 45, 55, 80, 130, 165, 190, 210, 275, 300, 330]
-    // red, coral, orange, amber, yellow, lime, green, teal, cyan, blue, violet, magenta, hot pink
-    var kh = randChoice(kusamaHues)
-    PAR.flowerColor = {min:[kh,0.85,0.92,1], max:[kh,0.85,0.92,1]}
-    PAR.leafColor   = {min:[130,0.75,0.55,1], max:[130,0.75,0.55,1]}   // flat vivid green
-    PAR.innerColor  = {min:[0,0,0.05,1], max:[0,0,0.05,1]}             // dark eye base, dots come later
-    PAR.stemColor   = {min:[130,0.70,0.50,1], max:[130,0.70,0.50,1]}   // green stems
-    PAR.leafType    = [0]                                              // no veins, dots go on top
-
-    // rounded, full, thick
-    PAR.flowerShape     = (x) => (pow(sin(PI*x),0.4))
-    PAR.flowerOpenCurve = (x,op) => (2 + op*6)
-    PAR.flowerPetal     = randChoice([6,7,8])
-    PAR.flowerWidth     = normRand(22,32)
-    PAR.leafShape       = (x) => (pow(sin(PI*x),0.4))
-    PAR.leafWidth       = normRand(20,32)
-    PAR.leafLength      = normRand(35,60)
-    PAR.stemWidth       = normRand(9,16)
-    PAR.stemBend        = normRand(8,18)
-
-    // high flower and density counts
-    PAR.stemCount    = randChoice([2,3])
-    PAR.shootCount   = randChoice([2,3])
-    PAR.leafChance   = normRand(0.03,0.07)
-    PAR.leafPosition = 2
-    PAR.sheathLength = 0
-
-    PAR.dots     = true
-    PAR.dotColor = randChoice(["#ffffff","#111111"])   // white or black dots
-  }
-    
-  console.log(PAR)
-
-  vizParams(PAR)
-  return PAR
-}
-
 // generate a woody plant
 function woody(args){
   var args =(args != undefined) ? args : {};
@@ -1428,6 +1388,90 @@ function dot(ctx,x,y,r,col){
   ctx.arc(x,y,r,0,2*PI)
   ctx.fillStyle = col
   ctx.fill()
+}
+
+// ---- Kusama: her own family, drawn from scratch ----
+function kPetal(ctx, cx, cy, ang, len, wid, col, dotCol){
+  var ux = cos(ang), uy = sin(ang), px = -uy, py = ux
+  var steps = 24, left = [], right = []
+  for (var i = 0; i <= steps; i++){
+    var t = i/steps, w = wid*pow(sin(PI*t),0.55)
+    var sx = cx + ux*len*t, sy = cy + uy*len*t
+    left.push([sx+px*w, sy+py*w]); right.push([sx-px*w, sy-py*w])
+  }
+  var pts = left.concat(right.reverse())
+  ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1])
+  for (var k = 1; k < pts.length; k++){ ctx.lineTo(pts[k][0], pts[k][1]) }
+  ctx.closePath(); ctx.fillStyle = col; ctx.fill()
+  ctx.lineWidth = 4; ctx.lineJoin = "round"; ctx.strokeStyle = "#111111"; ctx.stroke()
+  for (var i = 3; i < steps-2; i += 2){
+    var t = i/steps, w = wid*pow(sin(PI*t),0.55)
+    var sx = cx + ux*len*t, sy = cy + uy*len*t
+    var across = Math.max(1, Math.round((2*w)/14))
+    for (var j = 0; j <= across; j++){
+      var f = j/across, dr = 3.0*(0.35 + 0.65*sin(PI*t))
+      dot(ctx, sx+px*(2*w*f-w), sy+py*(2*w*f-w), dr, dotCol)
+    }
+  }
+}
+function kBlob(ctx, cx, cy, ang, size, col, dotCol){
+  var ux = cos(ang), uy = sin(ang), px = -uy, py = ux
+  var steps = 24, left = [], right = []
+  for (var i = 0; i <= steps; i++){
+    var t = i/steps, w = size*0.5*pow(sin(PI*t),0.5)
+    var sx = cx + ux*size*t, sy = cy + uy*size*t
+    left.push([sx+px*w, sy+py*w]); right.push([sx-px*w, sy-py*w])
+  }
+  var pts = left.concat(right.reverse())
+  ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1])
+  for (var k = 1; k < pts.length; k++){ ctx.lineTo(pts[k][0], pts[k][1]) }
+  ctx.closePath(); ctx.fillStyle = col; ctx.fill()
+  ctx.lineWidth = 4; ctx.lineJoin = "round"; ctx.strokeStyle = "#111111"; ctx.stroke()
+  for (var i = 3; i < steps-2; i += 2){
+    var t = i/steps, w = size*0.5*pow(sin(PI*t),0.5)
+    var sx = cx + ux*size*t, sy = cy + uy*size*t
+    var across = Math.max(1, Math.round((2*w)/14))
+    for (var j = 0; j <= across; j++){
+      var f = j/across
+      dot(ctx, sx+px*(2*w*f-w), sy+py*(2*w*f-w), 2.6*(0.4+0.6*sin(PI*t)), dotCol)
+    }
+  }
+}
+function kBloom(ctx, cx, cy, R, col, dotCol){
+  var n = randChoice([6,7,8])
+  for (var i = 0; i < n; i++){
+    var ang = i*2*PI/n + normRand(-0.06,0.06)
+    kPetal(ctx, cx, cy, ang, R*normRand(0.92,1.08), R*0.42, col, dotCol)
+  }
+  var eyeCol = randChoice(["#111111","#e23b3b","#1f7a1f","#1f5fae"])
+  ctx.beginPath(); ctx.arc(cx, cy, R*0.3, 0, 2*PI)
+  ctx.fillStyle = eyeCol; ctx.fill()
+  ctx.lineWidth = 4; ctx.strokeStyle = "#111111"; ctx.stroke()
+  for (var r = R*0.08; r < R*0.28; r += R*0.075){
+    var m = Math.max(4, Math.round(2*PI*r/10))
+    for (var k = 0; k < m; k++){ var a = k*2*PI/m; dot(ctx, cx+r*cos(a), cy+r*sin(a), 2.2, dotCol) }
+  }
+}
+function drawKusama(ctx, PAR){
+  var hues = [0,12,30,45,55,80,130,165,190,210,275,300,330]
+  var col = hsv(randChoice(hues), 0.85, 0.92, 1)
+  var dotCol = randChoice(["#ffffff","#111111"])
+  var green = hsv(130, 0.70, 0.48, 1)
+  var cx = 300
+  var x0 = cx, y0 = 575, x1 = cx + normRand(-20,20), y1 = 270
+  var mx = cx + normRand(-60,60), my = 430
+  ctx.lineCap = "round"
+  ctx.beginPath(); ctx.moveTo(x0,y0); ctx.quadraticCurveTo(mx,my,x1,y1)
+  ctx.lineWidth = 30; ctx.strokeStyle = "#111111"; ctx.stroke()
+  ctx.lineWidth = 22; ctx.strokeStyle = green; ctx.stroke()
+  for (var t = 0.05; t < 0.95; t += 0.05){
+    var qx = (1-t)*(1-t)*x0 + 2*(1-t)*t*mx + t*t*x1
+    var qy = (1-t)*(1-t)*y0 + 2*(1-t)*t*my + t*t*y1
+    dot(ctx, qx, qy, 3, dotCol)
+  }
+  kBlob(ctx, cx+6, 470, 0.5, 150, green, dotCol)
+  kBlob(ctx, cx-6, 520, PI-0.5, 140, green, dotCol)
+  kBloom(ctx, x1, y1, normRand(130,155), col, dotCol)
 }
 
 // generate new plant
