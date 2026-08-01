@@ -1184,21 +1184,6 @@ function herbal(args){
   //Layer.filter(lay0,Filter.wispy)
   //Layer.filter(lay1,Filter.wispy)    
 
- if (PAR.dots){
-    var db = Layer.bound(lay1)
-    lay1.globalCompositeOperation = "source-atop"
-    var step = 26
-    var maxr = step*0.36
-    for (var gx = db.xmin; gx < db.xmax; gx += step){
-      for (var gy = db.ymin; gy < db.ymax; gy += step){
-        var wave = 0.5 + 0.5*sin((gx*0.7 + gy)*0.02)   // rolls 0 to 1 and back
-        var dr = maxr * (0.25 + 0.75*wave)             // small, big, small, again
-        dot(lay1, gx, gy, dr, PAR.dotColor)
-      }
-    }
-    lay1.globalCompositeOperation = "source-over"
-  }
-
   var b1 = Layer.bound(lay0)
   var b2 = Layer.bound(lay1)
   var bd = {
