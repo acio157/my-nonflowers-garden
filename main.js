@@ -926,7 +926,12 @@ function genParams(){
     PAR.branchColor = {min:[0,0,0,1], max:[0,0,0,1]}   // black lines
     PAR.stemColor   = {min:[0,0,0,1], max:[0,0,0,1]}   // black stems
     PAR.stemCount  = randChoice([1,2])                     // one or two stalks, not a bush
+    PAR.sheathLength = 0 //removing sheath for Miro look
     PAR.leafChance = randChoice([0, 0, normRand(0,0.03)])  // mostly few or no leaves
+    PAR.shootCount = randChoice([1,2])   // fewer blooms per stalk
+    PAR.flowerShape = (x) => (pow(sin(PI*x),0.5))   // smooth rounded petal, no jaggedness
+    PAR.flowerPetal = randChoice([5,6,7])           // a few bold petals
+    PAR.flowerWidth = normRand(16,26)               // fatter petals
   }
   console.log(PAR)
 
@@ -1109,7 +1114,7 @@ function herbal(args){
       var P_ = stem({ctx:lay0,xof:x0+P[-1].x,yof:y0+P[-1].y,
       rot:hr,
       len:PAR.shootLength*normRand(0.5,1.5),
-      col:{min:[70,0.2,0.9,1],max:[70,0.2,0.9,1]},
+      col:PAR.stemColor || {min:[70,0.2,0.9,1],max:[70,0.2,0.9,1]},
       wid:(x) => (2),
       ben:(x) => ([
           mapval(Noise.noise(x*1,j),0,1,-1,1)*x*10,
