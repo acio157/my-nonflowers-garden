@@ -938,6 +938,10 @@ function genParams(){
     PAR.flowerWidth = normRand(16,26)               // fatter petals
     PAR.starBloom = (Math.random() < 0.35)   // some Miró plants can bloom stars
   }
+    
+vizParams(PAR)
+  return PAR
+  }
 
 // generate a woody plant
 function woody(args){
@@ -1479,13 +1483,13 @@ function generate(){
   CTX = Layer.empty();
   CTX.fillStyle = "rgb(226,220,209)"
   CTX.fillRect(0,0,CTX.canvas.width,CTX.canvas.height)
-    var PAR = genParams();
-    var herb = (PAR.artist != "none") ? 
- true : (Math.random() <= 0.5);
-    if (herb){
-herbal({ctx:CTX,xof:300,yof:600,PAR:PAR})
-  }else{
-    woody({ctx:CTX,xof:300,yof:550,PAR:PAR})
+  var PAR = genParams();
+  if (PAR.artist == "kusama"){
+    drawKusama(CTX, PAR)
+  } else {
+    var herb = (PAR.artist != "none") ? true : (Math.random() <= 0.5);
+    if (herb){ herbal({ctx:CTX,xof:300,yof:600,PAR:PAR}) }
+    else { woody({ctx:CTX,xof:300,yof:550,PAR:PAR}) }
   }
   Layer.border(CTX,hexagon(0.98))
 }
