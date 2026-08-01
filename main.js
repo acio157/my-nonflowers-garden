@@ -811,7 +811,11 @@ function genParams(){
   var randint = (x,y) => (Math.floor(normRand(x,y)))
 
   var PAR = {}
-  
+  // --- artist switch (first decision each generation) ---
+  var artists = ["miro"]                  // the roster of possible artists
+  PAR.inspired = (Math.random() < 0.3)    // coin: artist-inspired or not
+  PAR.artist = PAR.inspired ? randChoice(artists) : "none"
+  CURRENT_ARTIST = PAR.artist             // remember it so the name can read it
   var flowerShapeMask = (x) => (pow(sin(PI*x),0.2))
   var leafShapeMask = (x) => (pow(sin(PI*x),0.5))
 
@@ -1310,7 +1314,9 @@ function fakeLatin(){
   var g2 = ["ia","antha","anthus","ella","aria","ora","ina","yntha","escia"]
   var sp = ["nocturna","vespertina","glauca","picta","radiata","coralligera","hexagona","nivea","umbratilis","sylvestris","aurata","lunaris","vulgaris","spinosa","fervida","pallida","florida","caelestis","saponaria","miroana"]
   function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1).toLowerCase() }
-  return cap(randChoice(g1)+randChoice(g2)) + " " + randChoice(sp)
+  var latin = cap(randChoice(g1)+randChoice(g2)) + " " + randChoice(sp)
+  var prefix = ({miro:"Miró's "})[CURRENT_ARTIST] || ""
+  return prefix + latin
 }
 // generate new plant
 function generate(){
