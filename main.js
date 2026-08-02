@@ -942,15 +942,17 @@ PAR.starBloom = (Math.random() < 0.35)   // some Miró plants can bloom stars
 // --- Kusama constraints ---
   if (PAR.artist == "kusama"){
     PAR.dots = true
-    PAR.dotPalette = [                  // a spread of saturated colors, never white
-      "#e23b3b",  // red
-      "#f0a020",  // orange
-      "#f2d21e",  // yellow
-      "#1f7a1f",  // green
-      "#1f5fae",  // blue
-      "#7b2d8e",  // violet
-      "#111111"   // black
+    var kusamaPalette = [        // options as [hue, saturation, value], never white
+      [0,   0.80, 0.90],   // red
+      [30,  0.85, 0.95],   // orange
+      [50,  0.90, 0.95],   // yellow
+      [130, 0.70, 0.55],   // green
+      [210, 0.75, 0.80],   // blue
+      [280, 0.60, 0.70],   // violet
+      [0,   0.00, 0.10]    // black
     ]
+    var kc = randChoice(kusamaPalette)                            // the one this flower uses
+    PAR.dotColor = {min:[kc[0],kc[1],kc[2],1], max:[kc[0],kc[1],kc[2],1]}
   }
 
   vizParams(PAR)
@@ -1058,7 +1060,7 @@ function woody(args){
 if (PAR.dots){
     var db = Layer.bound(lay1)
     lay1.globalCompositeOperation = "source-atop"
-    var dc = randChoice(PAR.dotPalette)       // pick ONE dot color for this whole flower
+    var dc = hsv(...PAR.dotColor.min)         // the chosen color, turned into a CSS string
     var step = 13                            // gap between dot centers; smaller = denser
     var maxr = 5.5                           // biggest a dot gets
     for (var gx = db.xmin; gx < db.xmax; gx += step){
@@ -1070,7 +1072,7 @@ if (PAR.dots){
     }
     lay1.globalCompositeOperation = "source-over"
   }
-
+    
   var b1 = Layer.bound(lay0)
   var b2 = Layer.bound(lay1)
   var bd = {
@@ -1218,7 +1220,7 @@ function herbal(args){
 if (PAR.dots){
     var db = Layer.bound(lay1)
     lay1.globalCompositeOperation = "source-atop"
-    var dc = randChoice(PAR.dotPalette)       // pick ONE dot color for this whole flower
+    var dc = hsv(...PAR.dotColor.min)         // the chosen color, turned into a CSS string
     var step = 13                            // gap between dot centers; smaller = denser
     var maxr = 5.5                           // biggest a dot gets
     for (var gx = db.xmin; gx < db.xmax; gx += step){
