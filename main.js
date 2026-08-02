@@ -936,10 +936,16 @@ function genParams(){
     PAR.flowerShape = (x) => (pow(sin(PI*x),0.5))   // smooth rounded petal, no jaggedness
     PAR.flowerPetal = randChoice([5,6,7])           // a few bold petals
     PAR.flowerWidth = normRand(16,26)               // fatter petals
-    PAR.starBloom = (Math.random() < 0.35)   // some Miró plants can bloom stars
+PAR.starBloom = (Math.random() < 0.35)   // some Miró plants can bloom stars
   }
-    
-vizParams(PAR)
+
+  // --- Kusama constraints ---
+  if (PAR.artist == "kusama"){
+    PAR.dots = true
+    PAR.dotColor = "rgba(17,17,17,0.92)"   // dark dots, never white
+  }
+
+  vizParams(PAR)
   return PAR
   }
 
@@ -1040,6 +1046,19 @@ function woody(args){
   //Layer.filter(lay0,Filter.fade)
   //Layer.filter(lay0,Filter.wispy)
   //Layer.filter(lay1,Filter.wispy)
+
+  if (PAR.dots){
+    var db = Layer.bound(lay1)
+    lay1.globalCompositeOperation = "source-atop"
+    var step = 13                            // gap between dot centers; smaller = denser
+    for (var gx = db.xmin; gx < db.xmax; gx += step){
+      for (var gy = db.ymin; gy < db.ymax; gy += step){
+        dot(lay1, gx, gy, 4, PAR.dotColor)   // radius 4 on a 13 grid reads as packed
+      }
+    }
+    lay1.globalCompositeOperation = "source-over"
+  }
+
   var b1 = Layer.bound(lay0)
   var b2 = Layer.bound(lay1)
   var bd = {
@@ -1468,14 +1487,10 @@ function generate(){
   CTX = Layer.empty();
   CTX.fillStyle = "rgb(226,220,209)"
   CTX.fillRect(0,0,CTX.canvas.width,CTX.canvas.height)
-  var PAR = genParams();
-  if (PAR.artist == "kusama"){
-    drawKusama(CTX, PAR)
-  } else {
-    var herb = (PAR.artist != "none") ? true : (Math.random() <= 0.5);
-    if (herb){ herbal({ctx:CTX,xof:300,yof:600,PAR:PAR}) }
-    else { woody({ctx:CTX,xof:300,yof:550,PAR:PAR}) }
-  }
+var PAR = genParams();
+  var herb = (PAR.artist != "none") ? true : (Math.random() <= 0.5);
+  if (herb){ herbal({ctx:CTX,xof:300,yof:600,PAR:PAR}) }
+  else { woody({ctx:CTX,xof:300,yof:550,PAR:PAR}) }
   Layer.border(CTX,hexagon(0.98))
 }
 
