@@ -939,10 +939,18 @@ function genParams(){
 PAR.starBloom = (Math.random() < 0.35)   // some Miró plants can bloom stars
   }
 
-  // --- Kusama constraints ---
+// --- Kusama constraints ---
   if (PAR.artist == "kusama"){
     PAR.dots = true
-    PAR.dotColor = "rgba(17,17,17,0.92)"   // dark dots, never white
+    PAR.dotColors = [                  // a spread of saturated colors, never white
+      "#e23b3b",  // red
+      "#f0a020",  // orange
+      "#f2d21e",  // yellow
+      "#1f7a1f",  // green
+      "#1f5fae",  // blue
+      "#7b2d8e",  // violet
+      "#111111"   // black
+    ]
   }
 
   vizParams(PAR)
@@ -1047,13 +1055,17 @@ function woody(args){
   //Layer.filter(lay0,Filter.wispy)
   //Layer.filter(lay1,Filter.wispy)
 
-  if (PAR.dots){
+if (PAR.dots){
     var db = Layer.bound(lay1)
     lay1.globalCompositeOperation = "source-atop"
+    var dc = randChoice(PAR.dotColors)       // pick ONE dot color for this whole flower
     var step = 13                            // gap between dot centers; smaller = denser
+    var maxr = 5.5                           // biggest a dot gets
     for (var gx = db.xmin; gx < db.xmax; gx += step){
       for (var gy = db.ymin; gy < db.ymax; gy += step){
-        dot(lay1, gx, gy, 4, PAR.dotColor)   // radius 4 on a 13 grid reads as packed
+        var wave = 0.5 + 0.5*sin((gx*0.7 + gy)*0.03)      // rolls small -> big -> small across the field
+        var dr = maxr*(0.3 + 0.7*wave)                    // graded radius, never fully vanishing
+        dot(lay1, gx, gy, dr, dc)                         // same color for every dot
       }
     }
     lay1.globalCompositeOperation = "source-over"
@@ -1203,13 +1215,17 @@ function herbal(args){
   //Layer.filter(lay0,Filter.wispy)
   //Layer.filter(lay1,Filter.wispy)
 
-  if (PAR.dots){
+if (PAR.dots){
     var db = Layer.bound(lay1)
     lay1.globalCompositeOperation = "source-atop"
+    var dc = randChoice(PAR.dotColors)       // pick ONE dot color for this whole flower
     var step = 13                            // gap between dot centers; smaller = denser
+    var maxr = 5.5                           // biggest a dot gets
     for (var gx = db.xmin; gx < db.xmax; gx += step){
       for (var gy = db.ymin; gy < db.ymax; gy += step){
-        dot(lay1, gx, gy, 4, PAR.dotColor)   // radius 4 on a 13 grid reads as packed
+        var wave = 0.5 + 0.5*sin((gx*0.7 + gy)*0.03)      // rolls small -> big -> small across the field
+        var dr = maxr*(0.3 + 0.7*wave)                    // graded radius, never fully vanishing
+        dot(lay1, gx, gy, dr, dc)                         // same color for every dot
       }
     }
     lay1.globalCompositeOperation = "source-over"
