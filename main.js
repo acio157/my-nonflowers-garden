@@ -740,7 +740,7 @@ function vizParams(PAR){
   viz += "<table><tr><td "+tabstyle+">Summary</td></tr><tr><td "+tabstyle+"><table><tr>"
   var cnt = 0
   for (var k in PAR){
-    if (typeof(PAR[k]) == "number"){
+    if (typeof(PAR[k]) == "number" || typeof(PAR[k]) == "boolean"){
       cnt += 1
       viz += "<td><td "+tabstyle+">"+k+"</td><td "+tabstyle+">"+fmt(PAR[k])+"</td></td>"
       if (cnt % 4 == 0){
@@ -749,9 +749,11 @@ function vizParams(PAR){
     }
   }
   viz += "</tr></table>"
-  function fmt(a){
+function fmt(a){
     if (typeof(a) == "number"){
       return a.toFixed(3)
+    }else if (typeof(a)=="boolean"){
+      return ""+a
     }else if (typeof(a)=="object"){
       var r = "<table><tr>"
       for (var k in a){
