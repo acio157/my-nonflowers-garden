@@ -1393,10 +1393,10 @@ function kPetal(ctx, cx, cy, ang, len, wid, col, dotCol){
   for (var k = 1; k < pts.length; k++){ ctx.lineTo(pts[k][0], pts[k][1]) }
   ctx.closePath(); ctx.fillStyle = col; ctx.fill()
   ctx.lineWidth = 4; ctx.lineJoin = "round"; ctx.strokeStyle = "#111111"; ctx.stroke()
-  for (var i = 3; i < steps-2; i += 2){
+  for (var i = 3; i < steps-2; i += 1){
     var t = i/steps, w = wid*pow(sin(PI*t),0.55)
     var sx = cx + ux*len*t, sy = cy + uy*len*t
-    var across = Math.max(1, Math.round((2*w)/14))
+    var across = Math.max(1, Math.round((2*w)/7))
     for (var j = 0; j <= across; j++){
       var f = j/across, dr = 3.0*(0.35 + 0.65*sin(PI*t))
       dot(ctx, sx+px*(2*w*f-w), sy+py*(2*w*f-w), dr, dotCol)
@@ -1416,10 +1416,10 @@ function kBlob(ctx, cx, cy, ang, size, col, dotCol){
   for (var k = 1; k < pts.length; k++){ ctx.lineTo(pts[k][0], pts[k][1]) }
   ctx.closePath(); ctx.fillStyle = col; ctx.fill()
   ctx.lineWidth = 4; ctx.lineJoin = "round"; ctx.strokeStyle = "#111111"; ctx.stroke()
-  for (var i = 3; i < steps-2; i += 2){
+  for (var i = 3; i < steps-2; i += 1){
     var t = i/steps, w = size*0.5*pow(sin(PI*t),0.5)
     var sx = cx + ux*size*t, sy = cy + uy*size*t
-    var across = Math.max(1, Math.round((2*w)/14))
+    var across = Math.max(1, Math.round((2*w)/7))
     for (var j = 0; j <= across; j++){
       var f = j/across
       dot(ctx, sx+px*(2*w*f-w), sy+py*(2*w*f-w), 2.6*(0.4+0.6*sin(PI*t)), dotCol)
