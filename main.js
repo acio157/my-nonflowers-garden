@@ -814,7 +814,7 @@ function genParams(){
 
   var PAR = {}
   // --- artist switch (first decision each generation) ---
-  var artists = ["miro","kusama"]               // the roster of possible artists
+  var artists = ["miro","kusama","pollock"]     // the roster of possible artists
   PAR.inspired = (Math.random() < 0.3)    // coin: artist-inspired or not
   PAR.artist = PAR.inspired ? randChoice(artists) : "none"
   CURRENT_ARTIST = PAR.artist             // remember it so the name can read it
@@ -954,7 +954,13 @@ PAR.starBloom = (Math.random() < 0.35)   // some Miró plants can bloom stars
       [0,   0.00, 0.10]    // black
     ]
     var kc = randChoice(kusamaPalette)                            // the one this flower uses
-    PAR.dotColor = {min:[kc[0],kc[1],kc[2],1], max:[kc[0],kc[1],kc[2],1]}
+PAR.dotColor = {min:[kc[0],kc[1],kc[2],1], max:[kc[0],kc[1],kc[2],1]}
+  }
+
+  // --- Pollock constraints ---
+  if (PAR.artist == "pollock"){
+    PAR.splatter = true
+    PAR.flowerShape = (x) => (pow(sin(PI*x),0.5))   // smooth base petal; the spatter makes the edge, not noise
   }
 
   vizParams(PAR)
@@ -1071,6 +1077,25 @@ if (PAR.dots){
         var dr = maxr*(0.3 + 0.7*wave)                    // graded radius, never fully vanishing
         dot(lay1, gx, gy, dr, dc)                         // same color for every dot
       }
+    }
+ lay1.globalCompositeOperation = "source-over"
+  }
+
+  if (PAR.splatter){
+    var sb = Layer.bound(lay1)
+    lay1.globalCompositeOperation = "source-atop"          // keep the spatter on the petals for now
+    var area = (sb.xmax - sb.xmin) * (sb.ymax - sb.ymin)
+    var flecks = Math.floor(area / 30)                     // droplet count scales with bloom size; smaller divisor = denser
+    for (var s = 0; s < flecks; s++){
+      var fx = normRand(sb.xmin, sb.xmax)
+      var fy = normRand(sb.ymin, sb.ymax)
+      var t  = Math.random()                               // sample the flower's own color range
+      var fh = lerpHue(PAR.flowerColor.min[0], PAR.flowerColor.max[0], t)
+      var fs = mapval(t, 0, 1, PAR.flowerColor.min[1], PAR.flowerColor.max[1])
+      var fv = Math.min(1, mapval(t, 0, 1, PAR.flowerColor.min[2], PAR.flowerColor.max[2]) * normRand(0.65, 1.1))
+      var fcol = hsv(fh, fs, fv, normRand(0.5, 1))
+      var fr = (Math.random() < 0.85) ? normRand(0.5, 2.2) : normRand(2.5, 5)   // mostly fine flecks, a few fatter blobs
+      dot(lay1, fx, fy, fr, fcol)
     }
     lay1.globalCompositeOperation = "source-over"
   }
@@ -1400,7 +1425,7 @@ function fakeLatin(){
   var sp = ["nocturna","vespertina","glauca","picta","radiata","coralligera","hexagona","nivea","umbratilis","sylvestris","aurata","lunaris","vulgaris","spinosa","fervida","pallida","florida","caelestis","saponaria","miroana"]
   function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1).toLowerCase() }
   var latin = cap(randChoice(g1)+randChoice(g2)) + " " + randChoice(sp)
-  var prefix = ({miro:"Miró's ", kusama:"Kusama's "})[CURRENT_ARTIST] || ""
+  var prefix = ({miro:"Miró's ", kusama:"Kusama's ", pollock:"Pollock's "})[CURRENT_ARTIST] || ""
   return prefix + latin
 }
 
