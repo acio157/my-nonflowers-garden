@@ -957,9 +957,10 @@ PAR.starBloom = (Math.random() < 0.35)   // some Miró plants can bloom stars
 PAR.dotColor = {min:[kc[0],kc[1],kc[2],1], max:[kc[0],kc[1],kc[2],1]}
   }
 
-  // --- Pollock constraints ---
+// --- Pollock constraints ---
   if (PAR.artist == "pollock"){
     PAR.splatter = true
+    PAR.splatterReach = normRand(0.06, 0.08)        // fraction of bloom size the specks fling past the edge
     PAR.flowerShape = (x) => (pow(sin(PI*x),0.5))   // smooth base petal; the spatter makes the edge, not noise
   }
 
@@ -1102,8 +1103,8 @@ if (PAR.splatter){
 
     // pass 2: a lighter fling PAST the edge, unclipped, so the silhouette breaks up
     lay1.globalCompositeOperation = "source-over"
-    var mx = 0.12 * (sb.xmax - sb.xmin)                    // how far past the edge flecks may land
-    var my = 0.12 * (sb.ymax - sb.ymin)
+    var mx = PAR.splatterReach * (sb.xmax - sb.xmin)
+    var my = PAR.splatterReach * (sb.ymax - sb.ymin)
     var flung = Math.floor(flecks * 0.25)                  // fewer than the clipped pass
     for (var s = 0; s < flung; s++){
       var fx = normRand(sb.xmin - mx, sb.xmax + mx)
@@ -1299,8 +1300,8 @@ if (PAR.splatter){
 
     // pass 2: a lighter fling PAST the edge, unclipped, so the silhouette breaks up
     lay1.globalCompositeOperation = "source-over"
-    var mx = 0.12 * (sb.xmax - sb.xmin)                    // how far past the edge flecks may land
-    var my = 0.12 * (sb.ymax - sb.ymin)
+    var mx = PAR.splatterReach * (sb.xmax - sb.xmin)
+    var my = PAR.splatterReach * (sb.ymax - sb.ymin)
     var flung = Math.floor(flecks * 0.25)                  // fewer than the clipped pass
     for (var s = 0; s < flung; s++){
       var fx = normRand(sb.xmin - mx, sb.xmax + mx)
