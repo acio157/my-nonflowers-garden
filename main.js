@@ -1199,9 +1199,21 @@ function herbal(args){
     }
   }
 
-  //Layer.filter(lay0,Filter.fade)
+//Layer.filter(lay0,Filter.fade)
   //Layer.filter(lay0,Filter.wispy)
-  //Layer.filter(lay1,Filter.wispy)    
+  //Layer.filter(lay1,Filter.wispy)
+
+  if (PAR.dots){
+    var db = Layer.bound(lay1)
+    lay1.globalCompositeOperation = "source-atop"
+    var step = 13                            // gap between dot centers; smaller = denser
+    for (var gx = db.xmin; gx < db.xmax; gx += step){
+      for (var gy = db.ymin; gy < db.ymax; gy += step){
+        dot(lay1, gx, gy, 4, PAR.dotColor)   // radius 4 on a 13 grid reads as packed
+      }
+    }
+    lay1.globalCompositeOperation = "source-over"
+  }
 
   var b1 = Layer.bound(lay0)
   var b2 = Layer.bound(lay1)
@@ -1488,7 +1500,7 @@ function generate(){
   CTX.fillStyle = "rgb(226,220,209)"
   CTX.fillRect(0,0,CTX.canvas.width,CTX.canvas.height)
 var PAR = genParams();
-  var herb = (PAR.artist != "none") ? true : (Math.random() <= 0.5);
+  var herb = (PAR.artist == "miro") ? true : (Math.random() <= 0.5);
   if (herb){ herbal({ctx:CTX,xof:300,yof:600,PAR:PAR}) }
   else { woody({ctx:CTX,xof:300,yof:550,PAR:PAR}) }
   Layer.border(CTX,hexagon(0.98))
