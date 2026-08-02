@@ -1081,11 +1081,13 @@ if (PAR.dots){
  lay1.globalCompositeOperation = "source-over"
   }
 
-  if (PAR.splatter){
+if (PAR.splatter){
     var sb = Layer.bound(lay1)
-    lay1.globalCompositeOperation = "source-atop"          // keep the spatter on the petals for now
     var area = (sb.xmax - sb.xmin) * (sb.ymax - sb.ymin)
     var flecks = Math.floor(area / 30)                     // droplet count scales with bloom size; smaller divisor = denser
+
+    // pass 1: spatter texture, clipped to the petals
+    lay1.globalCompositeOperation = "source-atop"
     for (var s = 0; s < flecks; s++){
       var fx = normRand(sb.xmin, sb.xmax)
       var fy = normRand(sb.ymin, sb.ymax)
@@ -1097,7 +1099,23 @@ if (PAR.dots){
       var fr = (Math.random() < 0.85) ? normRand(0.5, 2.2) : normRand(2.5, 5)   // mostly fine flecks, a few fatter blobs
       dot(lay1, fx, fy, fr, fcol)
     }
+
+    // pass 2: a lighter fling PAST the edge, unclipped, so the silhouette breaks up
     lay1.globalCompositeOperation = "source-over"
+    var mx = 0.12 * (sb.xmax - sb.xmin)                    // how far past the edge flecks may land
+    var my = 0.12 * (sb.ymax - sb.ymin)
+    var flung = Math.floor(flecks * 0.25)                  // fewer than the clipped pass
+    for (var s = 0; s < flung; s++){
+      var fx = normRand(sb.xmin - mx, sb.xmax + mx)
+      var fy = normRand(sb.ymin - my, sb.ymax + my)
+      var t  = Math.random()
+      var fh = lerpHue(PAR.flowerColor.min[0], PAR.flowerColor.max[0], t)
+      var fs = mapval(t, 0, 1, PAR.flowerColor.min[1], PAR.flowerColor.max[1])
+      var fv = Math.min(1, mapval(t, 0, 1, PAR.flowerColor.min[2], PAR.flowerColor.max[2]) * normRand(0.65, 1.1))
+      var fcol = hsv(fh, fs, fv, normRand(0.4, 0.9))
+      var fr = normRand(0.4, 1.8)                          // finer specks fling further
+      dot(lay1, fx, fy, fr, fcol)
+    }
   }
     
   var b1 = Layer.bound(lay0)
@@ -1258,6 +1276,43 @@ if (PAR.dots){
       }
     }
     lay1.globalCompositeOperation = "source-over"
+  }
+
+if (PAR.splatter){
+    var sb = Layer.bound(lay1)
+    var area = (sb.xmax - sb.xmin) * (sb.ymax - sb.ymin)
+    var flecks = Math.floor(area / 30)                     // droplet count scales with bloom size; smaller divisor = denser
+
+    // pass 1: spatter texture, clipped to the petals
+    lay1.globalCompositeOperation = "source-atop"
+    for (var s = 0; s < flecks; s++){
+      var fx = normRand(sb.xmin, sb.xmax)
+      var fy = normRand(sb.ymin, sb.ymax)
+      var t  = Math.random()                               // sample the flower's own color range
+      var fh = lerpHue(PAR.flowerColor.min[0], PAR.flowerColor.max[0], t)
+      var fs = mapval(t, 0, 1, PAR.flowerColor.min[1], PAR.flowerColor.max[1])
+      var fv = Math.min(1, mapval(t, 0, 1, PAR.flowerColor.min[2], PAR.flowerColor.max[2]) * normRand(0.65, 1.1))
+      var fcol = hsv(fh, fs, fv, normRand(0.5, 1))
+      var fr = (Math.random() < 0.85) ? normRand(0.5, 2.2) : normRand(2.5, 5)   // mostly fine flecks, a few fatter blobs
+      dot(lay1, fx, fy, fr, fcol)
+    }
+
+    // pass 2: a lighter fling PAST the edge, unclipped, so the silhouette breaks up
+    lay1.globalCompositeOperation = "source-over"
+    var mx = 0.12 * (sb.xmax - sb.xmin)                    // how far past the edge flecks may land
+    var my = 0.12 * (sb.ymax - sb.ymin)
+    var flung = Math.floor(flecks * 0.25)                  // fewer than the clipped pass
+    for (var s = 0; s < flung; s++){
+      var fx = normRand(sb.xmin - mx, sb.xmax + mx)
+      var fy = normRand(sb.ymin - my, sb.ymax + my)
+      var t  = Math.random()
+      var fh = lerpHue(PAR.flowerColor.min[0], PAR.flowerColor.max[0], t)
+      var fs = mapval(t, 0, 1, PAR.flowerColor.min[1], PAR.flowerColor.max[1])
+      var fv = Math.min(1, mapval(t, 0, 1, PAR.flowerColor.min[2], PAR.flowerColor.max[2]) * normRand(0.65, 1.1))
+      var fcol = hsv(fh, fs, fv, normRand(0.4, 0.9))
+      var fr = normRand(0.4, 1.8)                          // finer specks fling further
+      dot(lay1, fx, fy, fr, fcol)
+    }
   }
 
   var b1 = Layer.bound(lay0)
