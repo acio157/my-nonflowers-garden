@@ -942,7 +942,7 @@ PAR.starBloom = (Math.random() < 0.35)   // some Miró plants can bloom stars
 // --- Kusama constraints ---
   if (PAR.artist == "kusama"){
     PAR.dots = true
-    PAR.dotColors = [                  // a spread of saturated colors, never white
+    PAR.dotPalette = [                  // a spread of saturated colors, never white
       "#e23b3b",  // red
       "#f0a020",  // orange
       "#f2d21e",  // yellow
@@ -1058,7 +1058,7 @@ function woody(args){
 if (PAR.dots){
     var db = Layer.bound(lay1)
     lay1.globalCompositeOperation = "source-atop"
-    var dc = randChoice(PAR.dotColors)       // pick ONE dot color for this whole flower
+    var dc = randChoice(PAR.dotPalette)       // pick ONE dot color for this whole flower
     var step = 13                            // gap between dot centers; smaller = denser
     var maxr = 5.5                           // biggest a dot gets
     for (var gx = db.xmin; gx < db.xmax; gx += step){
@@ -1218,7 +1218,7 @@ function herbal(args){
 if (PAR.dots){
     var db = Layer.bound(lay1)
     lay1.globalCompositeOperation = "source-atop"
-    var dc = randChoice(PAR.dotColors)       // pick ONE dot color for this whole flower
+    var dc = randChoice(PAR.dotPalette)       // pick ONE dot color for this whole flower
     var step = 13                            // gap between dot centers; smaller = denser
     var maxr = 5.5                           // biggest a dot gets
     for (var gx = db.xmin; gx < db.xmax; gx += step){
